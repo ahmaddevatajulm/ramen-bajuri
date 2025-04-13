@@ -8,35 +8,39 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['pdf_file'])) {
     $allowed_extensions = ['pdf'];
     $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
 
-    // Menentukan batas ukuran file (10MB = 10 * 1024 * 1024)
-    $max_size = 25 * 1024 * 1024;  // 10MB
-
     if (in_array($file_ext, $allowed_extensions)) {
-        if ($file_size <= $max_size) {  // Memeriksa apakah ukuran file <= 10MB
+        if ($file_size > 2 * 1024 * 1024) {  // Check if file size > 2MB
             $upload_path = 'uploads/' . $file_name;
             if (move_uploaded_file($file_tmp, $upload_path)) {
-                // Pesan berhasil diupload
-                echo '<div class="alert success">
-                        <span class="icon">&#10003;</span> 
-                        <strong>Berhasil!</strong> File telah berhasil diunggah.
-                      </div>';
+                echo "File berhasil diupload.";
             } else {
-                echo '<div class="alert error">
-                        <span class="icon">&#10060;</span> 
-                        <strong>Gagal!</strong> Terjadi kesalahan saat mengunggah file.
-                      </div>';
+                echo "Terjadi kesalahan saat mengunggah file.";
             }
         } else {
-            echo '<div class="alert error">
-                    <span class="icon">&#10060;</span> 
-                    <strong>Gagal!</strong> File terlalu besar. Maksimum ukuran file adalah 10MB.
-                  </div>';
+            echo "File harus lebih besar dari 2MB.";
         }
     } else {
-        echo '<div class="alert error">
-                <span class="icon">&#10060;</span> 
-                <strong>Gagal!</strong> Hanya file PDF yang diizinkan.
-              </div>';
+        echo "Hanya file PDF yang diizinkan.";
     }
 }
 ?>
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Menu PDF</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Unggah Menu Ramen Bajuri</h1>
+        <form action="upload.php" method="post" enctype="multipart/form-data">
+            <label for="pdf_file">Pilih file PDF menu:</label>
+            <input type="file" name="pdf_file" id="pdf_file" accept="application/pdf" required>
+            <button type="submit">Unggah Menu</button>
+        </form>
+    </div>
+</body>
+</html>
